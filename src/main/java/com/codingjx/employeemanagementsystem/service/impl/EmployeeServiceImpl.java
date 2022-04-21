@@ -1,11 +1,13 @@
 package com.codingjx.employeemanagementsystem.service.impl;
 
+import com.codingjx.employeemanagementsystem.exception.ResourceNotFoundException;
 import com.codingjx.employeemanagementsystem.model.Employee;
 import com.codingjx.employeemanagementsystem.repository.EmployeeRepository;
 import com.codingjx.employeemanagementsystem.service.EmployeeService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -23,5 +25,16 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<Employee> getAllEmployees() {
         return employeeRepository.findAll();
+    }
+
+    @Override
+    public Employee getEmployeeById(long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+
+        if (employee.isPresent()) {
+            return employee.get();
+        } else {
+            throw new ResourceNotFoundException("Employee", "Id", id);
+        }
     }
 }
